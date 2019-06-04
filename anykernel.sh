@@ -29,6 +29,27 @@ dump_boot;
 
 # begin ramdisk changes
 
+# Check for /vendor and define target paths
+if [[ $os = "stock" ]]; then
+  mount -o rw,remount -t auto /vendor > /dev/null;
+  target="/vendor/etc/init/hw/init.target.rc"
+else
+  mount -o rw,remount -t auto /system > /dev/null;
+  target="/system/etc/init/init.target.rc"
+fi;
+
+irq="/vendor/etc/msm_irqbalance.conf"
+
+# Cleanup previous vendor changes
+ui_print " " "Cleaning up...";
+for files in "${target}" "${irq}"
+do
+  restore_file $files;
+done
+
+# Clean up existing ramdisk overlays
+rm -rf $ramdisk/overlay;
+
 # If the kernel image and dtbs are separated in the zip
 decomp_img=$home/kernels/$os/Image
 comp_img=$decomp_img.gz
