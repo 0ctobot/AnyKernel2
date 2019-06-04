@@ -1,0 +1,7 @@
+id=NeutrinoSettings
+name=NeutrinoSettings
+version=NeutrinoKernel-reticulum
+versionCode=5
+author=0ctobot
+description=Systemlessly applies NeutrinoKernel settings. Module is auto-removed if another kernel is installed.
+minMagisk=17000

@@ -60,6 +60,23 @@ if [ -f $comp_img ]; then
     $bin/magiskboot --decompress $comp_img $decomp_img;
     $bin/magiskboot --hexpatch $decomp_img 736B69705F696E697472616D667300 77616E745F696E697472616D667300;
     $bin/magiskboot --compress=gzip $decomp_img $comp_img;
+    ui_print " " "Installing NeutrinoSettings module...";
+    mountpoint -q /data && {
+      # Install NeutrinoSettings module
+      mkdir -p /data/adb/modules/NeutrinoSettings;
+      cp -r $home/NeutrinoSettings /data/adb/modules;
+
+      # Install second-stage late init script
+      mkdir -p /data/adb/service.d;
+      cp $home/95-neutrino.sh /data/adb/service.d;
+      chmod +x /data/adb/service.d/95-neutrino.sh;
+    }
+    mountpoint -q /system_root && {
+      # Patch init.rc to mount blkio cgroups
+      mkdir -p $ramdisk/overlay
+      cp /system_root/init.rc $ramdisk/overlay
+      replace_string $ramdisk/overlay/init.rc blkio schedtune schedtune,blkio
+    }
   fi;
 
   # Concatenate all of the dtbs to the kernel
