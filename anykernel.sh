@@ -26,5 +26,26 @@ fi;
 
 ## AnyKernel install
 dump_boot;
+
+# begin ramdisk changes
+
+# If the kernel image and dtbs are separated in the zip
+decomp_img=$home/kernels/$os/Image
+comp_img=$decomp_img.gz
+if [ -f $comp_img ]; then
+  # Hexpatch the kernel if Magisk is installed ('skip_initramfs' -> 'want_initramfs')
+  if [ -d $ramdisk/.backup ]; then
+    ui_print " " "Magisk detected! Patching kernel so reflashing Magisk is not necessary...";
+    $bin/magiskboot --decompress $comp_img $decomp_img;
+    $bin/magiskboot --hexpatch $decomp_img 736B69705F696E697472616D667300 77616E745F696E697472616D667300;
+    $bin/magiskboot --compress=gzip $decomp_img $comp_img;
+  fi;
+
+  # Concatenate all of the dtbs to the kernel
+  cat $comp_img $home/dtbs/*.dtb > $home/Image.gz-dtb;
+fi;
+
+# end ramdisk changes
+
 write_boot;
 ## end install
