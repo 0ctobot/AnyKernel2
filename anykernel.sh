@@ -34,6 +34,20 @@ ramdisk_compression=gzip
 # import patching functions/variables - see for reference
 . tools/ak3-core.sh;
 
+## Select the correct image to flash
+hotdog="$(grep -wom 1 hotdog*.* /system/build.prop | sed 's/.....$//')";
+guacamole="$(grep -wom 1 guacamole*.* /system/build.prop | sed 's/.....$//')";
+userflavor="$(file_getprop /system/build.prop "ro.build.user"):$(file_getprop /system/build.prop "ro.build.flavor")";
+userflavor2="$(file_getprop2 /system/build.prop "ro.build.user"):$(file_getprop2 /system/build.prop "ro.build.flavor")";
+if [ "$userflavor" == "jenkins:$hotdog-user" ] || [ "$userflavor2" == "jenkins:$guacamole-user" ]; then
+  os="stock";
+  os_string="OxygenOS/HydrogenOS";
+else
+  os="custom";
+  os_string="a custom ROM";
+fi;
+ui_print " " "You are on $os_string!";
+
 ## AnyKernel install
 dump_boot;
 

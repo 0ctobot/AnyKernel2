@@ -36,6 +36,12 @@ contains() {
 file_getprop() {
   grep "^$2=" "$1" | cut -d= -f2-;
 }
+### Added to standardize OnePlus7(Pro) device detection
+
+# file_getprop2 <file> <property>
+file_getprop2() {
+  grep "^$2=" "$1" | cut -d= -f2- | sed -n 2p;
+}
 ###
 
 ### file/directory attributes functions:
