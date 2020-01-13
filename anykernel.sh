@@ -51,6 +51,10 @@ ui_print " " "You are on $os_string!";
 ## AnyKernel install
 dump_boot;
 
+# Clean up existing ramdisk overlays
+rm -rf $ramdisk/overlay;
+rm -rf $ramdisk/overlay.d;
+
 # Install the boot image
 write_boot;
 
