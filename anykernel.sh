@@ -37,6 +37,11 @@ dump_boot;
 rm -rf $ramdisk/overlay;
 rm -rf $ramdisk/overlay.d;
 
+# Use the provided dtb
+if [ -e $home/dtb ]; then
+  mv $home/dtb $home/split_img/;
+fi
+
 # Install the boot image
 write_boot;
 
